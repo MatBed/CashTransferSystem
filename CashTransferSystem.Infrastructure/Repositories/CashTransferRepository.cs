@@ -22,7 +22,8 @@ namespace CashTransferSystem.Infrastructure.Repositories
 
 			var parameters = new
 			{
-				SenderName = transfer.SenderName,
+				SenderFirstName = transfer.SenderFirstName,
+				SenderLastName = transfer.SenderLastName,
 				SenderPesel = transfer.SenderPesel,
 				ReceiverAccountNumber = transfer.ReceiverAccountNumber,
 				ReceiverName = transfer.ReceiverName,

@@ -2,7 +2,9 @@
 
 public class TransferEntity : BaseEntity
 {
-	public string SenderName { get; set; }
+	public string SenderFirstName { get; set; }
+
+	public string SenderLastName { get; set; }
 
 	public string SenderPesel { get; set; }
 
@@ -20,7 +22,7 @@ public class TransferEntity : BaseEntity
 
 	public int TransferTypeId { get; set; }
 
-	public TransferTypeEntity TransferType { get; set; }
+	public string TransferType { get; set; }
 
 	public bool SaveToAddressBook { get; set; }
 
