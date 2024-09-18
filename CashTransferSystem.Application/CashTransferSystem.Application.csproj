@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CashTransferSystem.Core\CashTransferSystem.Core.csproj" />
+    <ProjectReference Include="..\CashTransferSystem.Infrastructure\CashTransferSystem.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

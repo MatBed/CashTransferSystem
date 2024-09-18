@@ -1,4 +1,5 @@
 ﻿using CashTransferSystem.Core.Entities;
+using CashTransferSystem.Core.Enums;
 using CashTransferSystem.Core.Interfaces;
 using CashTransferSystem.Infrastructure.Data;
 using CashTransferSystem.Infrastructure.Static;
@@ -32,7 +33,8 @@ namespace CashTransferSystem.Infrastructure.Repositories
 				ReceiverAddress = transfer.ReceiverAddress,
 				Amount = transfer.Amount,
 				TransferTypeId = transfer.TransferTypeId,
-				SaveToAddressBook = transfer.SaveToAddressBook
+				SaveToAddressBook = transfer.SaveToAddressBook,
+				Status = DateTime.Now.Minute % 2 == 0 ? TransferStatus.Completed.ToString() : TransferStatus.Rejected.ToString(),
 			};
 
 			var result = await connection.ExecuteAsync(SqlQuery.CreateTransfer, parameters, commandType: CommandType.StoredProcedure);

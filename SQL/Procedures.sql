@@ -9,11 +9,12 @@ CREATE PROCEDURE dbo.pCreateTransfer
     @ReceiverAddress NVARCHAR(200),
     @Amount DECIMAL(18, 2),
     @TransferTypeId INT,
-    @SaveToAddressBook BIT
+    @SaveToAddressBook BIT,
+    @Status NVARCHAR(64)
 AS
 BEGIN
     INSERT INTO dbo.Transfers (SenderFirstName, SenderLastName, SenderPesel, ReceiverAccountNumber, ReceiverName, ReceiverNip, ReceiverRegon, ReceiverAddress, Amount, TransferTypeId, SaveToAddressBook, Status)
-    VALUES (@SenderFirstName, @SenderLastName, @SenderPesel, @ReceiverAccountNumber, @ReceiverName, @ReceiverNip, @ReceiverRegon, @ReceiverAddress, @Amount, @TransferTypeId, @SaveToAddressBook, 'Pending');
+    VALUES (@SenderFirstName, @SenderLastName, @SenderPesel, @ReceiverAccountNumber, @ReceiverName, @ReceiverNip, @ReceiverRegon, @ReceiverAddress, @Amount, @TransferTypeId, @SaveToAddressBook, @Status);
     
     IF @SaveToAddressBook = 1
     BEGIN
