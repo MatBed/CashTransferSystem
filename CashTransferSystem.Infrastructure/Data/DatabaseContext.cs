@@ -12,7 +12,7 @@ namespace CashTransferSystem.Infrastructure.Data
 		public DatabaseContext(IConfiguration configuration)
 		{
 			_configuration = configuration;
-			_connectionString = _configuration.GetConnectionString("DefaultConnection");
+			_connectionString = _configuration.GetConnectionString("CashTransferSystemConnectionString");
 		}
 
 		public IDbConnection CreateConnection()
