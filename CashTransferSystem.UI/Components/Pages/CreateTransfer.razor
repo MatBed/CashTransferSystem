@@ -4,6 +4,8 @@
 
 @inject IHttpClientFactory ClientFactory
 
+<MudPopoverProvider />
+
 <PageTitle>Create Transfer</PageTitle>
 
 <h1>Create Transfer</h1>
@@ -21,13 +23,13 @@
                 <MudTextField @bind-Value="newTransfer.ReceiverRegon" T="string" Label="Receiver Regon" Validation="@(new Func<string, IEnumerable<string>>(ValidRegon))" Required="true" RequiredError="Receiver regon is required!" />
                 <MudTextField @bind-Value="newTransfer.ReceiverAddress" T="string" Label="Receiver Address" Required="true" RequiredError="Receiver address is required!" />
                 <MudNumericField @bind-Value="newTransfer.Amount" T="decimal" Label="Amount" Required="true" RequiredError="Amount is required!" />
-                @* <div class="d-flex">
-                    <MudText>Transfer Type: </MudText>
-                    <MudRadioGroup T="string" Required="true" RequiredError="Please choose the transfer type!">
-                        <MudRadio Value="@("Normal")">Normal</MudRadio>
-                        <MudRadio Value="@("Priority")">Priority</MudRadio>
-                    </MudRadioGroup>
-                </div> *@
+                <MudSelect @bind-Value="newTransfer.TransferTypeId" T="int" Label="Transfer types">
+                    <MudSelectItem Value="0" Disabled="true">Please select transfer type</MudSelectItem>
+                    @foreach (var transferType in transferTypes)
+                    {
+                        <MudSelectItem Value="@transferType.Id">@transferType.Name</MudSelectItem>
+                    }
+                </MudSelect><br />
                 <MudCheckBox @bind-Value="newTransfer.SaveToAddressBook" T="bool" Required="false" Label="Save the receiver to address book" />
                 <div class="d-flex align-center justify-space-between">
                     <MudButton OnClick="(async () => await Submit())" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Register</MudButton>
@@ -48,7 +50,14 @@
 
     MudForm form;
 
+    List<TransferTypesViewModel> transferTypes = new();
     CreateTransferViewModel newTransfer = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var client = ClientFactory.CreateClient("BlazorApp.ServerAPI");
+        transferTypes = await client.GetFromJsonAsync<List<TransferTypesViewModel>>("https://localhost:7139/transferTypes");
+    }
 
     private IEnumerable<string> ValidAccountNumber(string accountNumber)
     {
@@ -83,9 +92,15 @@
         if (form.IsValid)
         {
             var client = ClientFactory.CreateClient("BlazorApp.ServerAPI");
-            newTransfer.TransferTypeId = 1;
             await client.PostAsJsonAsync("https://localhost:7139/transfers", newTransfer);
         }
+    }
+
+    public class TransferTypesViewModel
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
     }
 
     public class CreateTransferViewModel
