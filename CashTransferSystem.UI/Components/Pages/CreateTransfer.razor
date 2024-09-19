@@ -10,10 +10,15 @@
 
 <h1>Create Transfer</h1>
 
+@if (successCreateOperation)
+{
+    <MudAlert Severity="Severity.Success">Cash transfer was sent!</MudAlert>
+}
+
 <MudGrid>
     <MudItem xs="12" sm="7">
         <MudPaper>
-            <MudForm Model="@newTransfer" @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+            <MudForm Model="@newTransfer" @ref="form" @bind-IsValid="@successValidation" @bind-Errors="@errors">
                 <MudTextField @bind-Value="newTransfer.ReceiverAccountNumber" T="string" Label="Receiver Account Number" Validation="@(new Func<string, IEnumerable<string>>(ValidAccountNumber))" Required="true" RequiredError="Receiver account number is required!" />
                 <MudTextField @bind-Value="newTransfer.SenderFirstName" T="string" Label="Sender First Name" Required="true" RequiredError="Sender first name is required!" />
                 <MudTextField @bind-Value="newTransfer.SenderLastName" T="string" Label="Sender Last Name" Required="true" RequiredError="Sender last name is required!" />
@@ -32,7 +37,7 @@
                 </MudSelect><br />
                 <MudCheckBox @bind-Value="newTransfer.SaveToAddressBook" T="bool" Required="false" Label="Save the receiver to address book" />
                 <div class="d-flex align-center justify-space-between">
-                    <MudButton OnClick="(async () => await Submit())" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Register</MudButton>
+                    <MudButton OnClick="(async () => await Submit())" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!successValidation)" Class="ml-auto">Register</MudButton>
                 </div>
             </MudForm>
         </MudPaper>
@@ -45,7 +50,8 @@
     int NIP_LENGTH = 10;
     int REGON_LENGTH = 9;
 
-    bool success;
+    bool successValidation;
+    bool successCreateOperation = false;
     string[] errors = { };
 
     MudForm form;
@@ -93,6 +99,7 @@
         {
             var client = ClientFactory.CreateClient("BlazorApp.ServerAPI");
             await client.PostAsJsonAsync("https://localhost:7139/transfers", newTransfer);
+            successCreateOperation = true;
         }
     }
 
