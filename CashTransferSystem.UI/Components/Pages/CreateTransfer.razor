@@ -1,0 +1,105 @@
+﻿@page "/createCtransfer"
+@using MudBlazor
+@rendermode InteractiveServer
+
+@inject IHttpClientFactory ClientFactory
+
+<PageTitle>Create Transfer</PageTitle>
+
+<h1>Create Transfer</h1>
+
+<MudGrid>
+    <MudItem xs="12" sm="7">
+        <MudPaper>
+            <MudForm Model="@newTransfer" @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+                <MudTextField @bind-Value="newTransfer.ReceiverAccountNumber" T="string" Label="Receiver Account Number" Validation="@(new Func<string, IEnumerable<string>>(ValidAccountNumber))" Required="true" RequiredError="Receiver account number is required!" />
+                <MudTextField @bind-Value="newTransfer.SenderFirstName" T="string" Label="Sender First Name" Required="true" RequiredError="Sender first name is required!" />
+                <MudTextField @bind-Value="newTransfer.SenderLastName" T="string" Label="Sender Last Name" Required="true" RequiredError="Sender last name is required!" />
+                <MudTextField @bind-Value="newTransfer.SenderPesel" T="string" Label="Sender Pesel" Validation="@(new Func<string, IEnumerable<string>>(ValidPesel))" Required="true" RequiredError="Sender pesel is required!" />
+                <MudTextField @bind-Value="newTransfer.ReceiverName" T="string" Label="Receiver Name" Required="true" RequiredError="Receiver name is required!" />
+                <MudTextField @bind-Value="newTransfer.ReceiverNip" T="string" Label="Receiver Nip" Validation="@(new Func<string, IEnumerable<string>>(ValidNip))" Required="true" RequiredError="Receiver nip is required!" />
+                <MudTextField @bind-Value="newTransfer.ReceiverRegon" T="string" Label="Receiver Regon" Validation="@(new Func<string, IEnumerable<string>>(ValidRegon))" Required="true" RequiredError="Receiver regon is required!" />
+                <MudTextField @bind-Value="newTransfer.ReceiverAddress" T="string" Label="Receiver Address" Required="true" RequiredError="Receiver address is required!" />
+                <MudNumericField @bind-Value="newTransfer.Amount" T="decimal" Label="Amount" Required="true" RequiredError="Amount is required!" />
+                @* <div class="d-flex">
+                    <MudText>Transfer Type: </MudText>
+                    <MudRadioGroup T="string" Required="true" RequiredError="Please choose the transfer type!">
+                        <MudRadio Value="@("Normal")">Normal</MudRadio>
+                        <MudRadio Value="@("Priority")">Priority</MudRadio>
+                    </MudRadioGroup>
+                </div> *@
+                <MudCheckBox @bind-Value="newTransfer.SaveToAddressBook" T="bool" Required="false" Label="Save the receiver to address book" />
+                <div class="d-flex align-center justify-space-between">
+                    <MudButton OnClick="(async () => await Submit())" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Register</MudButton>
+                </div>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    int ACCOUNT_NUMBER_LENGTH = 26;
+    int PESEL_LENGTH = 11;
+    int NIP_LENGTH = 10;
+    int REGON_LENGTH = 9;
+
+    bool success;
+    string[] errors = { };
+
+    MudForm form;
+
+    CreateTransferViewModel newTransfer = new();
+
+    private IEnumerable<string> ValidAccountNumber(string accountNumber)
+    {
+        if (IsValid(accountNumber, ACCOUNT_NUMBER_LENGTH))
+            yield return "Account number should have 26 digits!";
+    }
+
+    private IEnumerable<string> ValidPesel(string pesel)
+    {
+        if (IsValid(pesel, PESEL_LENGTH))
+            yield return "Account number should have 11 digits!";
+    }
+
+    private IEnumerable<string> ValidNip(string nip)
+    {
+        if (IsValid(nip, NIP_LENGTH))
+            yield return "Account number should have 10 digits!";
+    }
+
+    private IEnumerable<string> ValidRegon(string regon)
+    {
+        if (IsValid(regon, REGON_LENGTH))
+            yield return "Account number should have 9 digits!";
+    }
+
+    private bool IsValid(string value, int valueLength) => !string.IsNullOrEmpty(value) && value?.Length != valueLength && value.All(char.IsDigit);
+
+    private async Task Submit()
+    {
+        await form.Validate();
+
+        if (form.IsValid)
+        {
+            var client = ClientFactory.CreateClient("BlazorApp.ServerAPI");
+            newTransfer.TransferTypeId = 1;
+            await client.PostAsJsonAsync("https://localhost:7139/transfers", newTransfer);
+        }
+    }
+
+    public class CreateTransferViewModel
+    {
+        public string SenderFirstName { get; set; }
+        public string SenderLastName { get; set; }
+        public string SenderPesel { get; set; }
+        public string ReceiverAccountNumber { get; set; }
+        public string ReceiverName { get; set; }
+        public string ReceiverNip { get; set; }
+        public string ReceiverRegon { get; set; }
+        public string ReceiverAddress { get; set; }
+        public decimal Amount { get; set; }
+        public int TransferTypeId { get; set; }
+        public bool SaveToAddressBook { get; set; }
+    }
+}

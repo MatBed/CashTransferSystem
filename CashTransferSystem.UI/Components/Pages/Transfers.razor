@@ -1,0 +1,87 @@
+﻿@using System.Net.Http.Json
+@using MudBlazor
+
+@inject IHttpClientFactory ClientFactory
+
+@page "/transfers"
+@attribute [StreamRendering]
+
+<PageTitle>Transfers</PageTitle>
+
+<h1>Transfers</h1>
+
+<MudTable Items="@CashTransfers" Hover="true" Striped="true" Filter="new Func<TransferViewModel,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem">
+    <ToolBarContent>
+        <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Sender First Name</MudTh>
+        <MudTh>Sender Last Name</MudTh>
+        <MudTh>Sender Pesel</MudTh>
+        <MudTh>Receiver Account Number</MudTh>
+        <MudTh>Receiver Name</MudTh>
+        <MudTh>Receiver Nip</MudTh>
+        <MudTh>Receiver Regon</MudTh>
+        <MudTh>Receiver Address</MudTh>
+        <MudTh>Amount</MudTh>
+        <MudTh>Transfer Type</MudTh>
+        <MudTh>Status</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="SenderFirstName">@context.SenderFirstName</MudTd>
+        <MudTd DataLabel="SenderLastName">@context.SenderLastName</MudTd>
+        <MudTd DataLabel="SenderPesel">@context.SenderPesel</MudTd>
+        <MudTd DataLabel="ReceiverAccountNumber">@context.ReceiverAccountNumber</MudTd>
+        <MudTd DataLabel="ReceiverName">@context.ReceiverName</MudTd>
+        <MudTd DataLabel="ReceiverNip">@context.ReceiverNip</MudTd>
+        <MudTd DataLabel="ReceiverRegon">@context.ReceiverRegon</MudTd>
+        <MudTd DataLabel="ReceiverAddress">@context.ReceiverAddress</MudTd>
+        <MudTd DataLabel="Amount">@context.Amount</MudTd>
+        <MudTd DataLabel="TransferType">@context.TransferType</MudTd>
+        <MudTd DataLabel="Status">@context.Status</MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code { 
+    private bool _hidePosition;
+    private bool _loading;
+    private IEnumerable<TransferViewModel> CashTransfers = new List<TransferViewModel>();
+
+    private string searchString = "";
+    private TransferViewModel selectedItem = null;
+    private HashSet<TransferViewModel> selectedItems = new HashSet<TransferViewModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var client = ClientFactory.CreateClient("BlazorApp.ServerAPI");
+        CashTransfers = await client.GetFromJsonAsync<List<TransferViewModel>>("https://localhost:7139/transfers");
+    }
+
+    private bool FilterFunc1(TransferViewModel element) => FilterFunc(element, searchString);
+
+    private bool FilterFunc(TransferViewModel element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.SenderFirstName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.SenderLastName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.SenderPesel.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    public record TransferViewModel(string SenderFirstName,
+        string SenderLastName,
+        string SenderPesel,
+        string ReceiverAccountNumber,
+        string ReceiverName,
+        string ReceiverNip,
+        string ReceiverRegon,
+        string ReceiverAddress,
+        decimal Amount,
+        string TransferType,
+        string Status);
+
+}
