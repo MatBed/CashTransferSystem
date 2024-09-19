@@ -6,5 +6,7 @@ public interface ICashTransferRepository
 {
 	Task<bool> CreateTransferAsync(TransferEntity transfer);
 
-	Task<IEnumerable<TransferEntity>> GetAllTransfersAsync(); 
+	Task<IEnumerable<TransferEntity>> GetAllTransfersAsync();
+
+	Task<IEnumerable<TransferTypeEntity>> GetAllTransferTypesAsync();
 }

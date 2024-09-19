@@ -1,7 +1,7 @@
 ﻿using CashTransferSystem.Application.Features.Transfers.Commands.CreateTransfer;
 using CashTransferSystem.Application.Features.Transfers.Queries.GetTransfers;
+using CashTransferSystem.Application.Features.Transfers.Queries.GetTransferTypes;
 using CashTransferSystem.Core.Entities;
-using MediatR;
 
 namespace CashTransferSystem.Application.Mappers;
 
@@ -25,7 +25,15 @@ public static class TransferMapper
 		}
 	}
 
-	public static TransferEntity MapCreateTransferCommandToTransferEntity(CreateTransferCommand createTransferCommand) => 
+    public static IEnumerable<GetTransferTypesResponse> MapTransferTypeEntitiesToGetTransferTypesResponse(IEnumerable<TransferTypeEntity> transferTypeEntities)
+    {
+        foreach (var entity in transferTypeEntities)
+        {
+            yield return new GetTransferTypesResponse(entity.Id, entity.Name);
+        }
+    }
+
+    public static TransferEntity MapCreateTransferCommandToTransferEntity(CreateTransferCommand createTransferCommand) => 
 		new TransferEntity
 		{
 			SenderFirstName = createTransferCommand.SenderFirstName,

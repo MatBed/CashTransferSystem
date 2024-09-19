@@ -17,10 +17,17 @@ CREATE TABLE CashTransferSystem.dbo.Transfers (
     CreatedAt DATETIME NOT NULL DEFAULT GETDATE()
 );
 
+
+ALTER TABLE dbo.Transfers
+ADD CONSTRAINT FK_Transfers_TransferTypes
+FOREIGN KEY (TransferTypeId) REFERENCES TransferTypes(Id);
+
+
 CREATE TABLE CashTransferSystem.dbo.TransferTypes (
     Id INT PRIMARY KEY IDENTITY(1,1),
     Name NVARCHAR(50) NOT NULL
 );
+
 
 CREATE TABLE CashTransferSystem.dbo.AddressBook (
     Id INT PRIMARY KEY IDENTITY(1,1),
