@@ -11,10 +11,7 @@
 
 <h1>Transfers</h1>
 
-<MudTable Items="@CashTransfers" Hover="true" Striped="true" Filter="new Func<TransferViewModel,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem">
-    <ToolBarContent>
-        <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-    </ToolBarContent>
+<MudTable Items="@CashTransfers" Hover="true" Striped="true" RowClassFunc="RowClassFunc">
     <HeaderContent>
         <MudTh>Sender First Name</MudTh>
         <MudTh>Sender Last Name</MudTh>
@@ -58,18 +55,8 @@
         CashTransfers = await client.GetFromJsonAsync<List<TransferViewModel>>("https://localhost:7139/transfers");
     }
 
-    private bool FilterFunc1(TransferViewModel element) => FilterFunc(element, searchString);
-
-    private bool FilterFunc(TransferViewModel element, string searchString)
+    private string RowClassFunc(TransferViewModel transfer, int rowIndex)
     {
-        if (string.IsNullOrWhiteSpace(searchString))
-            return true;
-        if (element.SenderFirstName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-        if (element.SenderLastName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-        if (element.SenderPesel.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-        return false;
+        return transfer.Status == "Rejected" ? "rejected-row" : string.Empty;
     }
 }
