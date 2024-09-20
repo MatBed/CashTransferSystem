@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashTransferSystem.Infrastr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashTransferSystem.Application", "CashTransferSystem.Application\CashTransferSystem.Application.csproj", "{52B77CB0-6EFA-4BE5-96EF-B6EC8FD89C2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashTransferSystem.API", "CashTransferSystem.API\CashTransferSystem.API.csproj", "{E30B16E6-A2FF-4381-8DF8-1808027910A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashTransferSystem.API", "CashTransferSystem.API\CashTransferSystem.API.csproj", "{E30B16E6-A2FF-4381-8DF8-1808027910A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashTransferSystem.Tests", "CashTransferSystem.Tests\CashTransferSystem.Tests.csproj", "{7B3F481F-1D26-47FA-831F-95CA42D1E2F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{E30B16E6-A2FF-4381-8DF8-1808027910A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E30B16E6-A2FF-4381-8DF8-1808027910A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E30B16E6-A2FF-4381-8DF8-1808027910A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B3F481F-1D26-47FA-831F-95CA42D1E2F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B3F481F-1D26-47FA-831F-95CA42D1E2F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B3F481F-1D26-47FA-831F-95CA42D1E2F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B3F481F-1D26-47FA-831F-95CA42D1E2F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
