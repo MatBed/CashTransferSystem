@@ -1,4 +1,5 @@
 ﻿@page "/createCtransfer"
+@using CashTransferSystem.UI.ViewModels
 @using MudBlazor
 @rendermode InteractiveServer
 
@@ -56,13 +57,13 @@
 
     MudForm form;
 
-    List<TransferTypesViewModel> transferTypes = new();
+    List<TransferTypeViewModel> transferTypes = new();
     CreateTransferViewModel newTransfer = new();
 
     protected override async Task OnInitializedAsync()
     {
         var client = ClientFactory.CreateClient("BlazorApp.ServerAPI");
-        transferTypes = await client.GetFromJsonAsync<List<TransferTypesViewModel>>("https://localhost:7139/transferTypes");
+        transferTypes = await client.GetFromJsonAsync<List<TransferTypeViewModel>>("https://localhost:7139/transferTypes");
     }
 
     private IEnumerable<string> ValidAccountNumber(string accountNumber)
@@ -101,27 +102,5 @@
             await client.PostAsJsonAsync("https://localhost:7139/transfers", newTransfer);
             successCreateOperation = true;
         }
-    }
-
-    public class TransferTypesViewModel
-    {
-        public int Id { get; set; }
-
-        public string Name { get; set; }
-    }
-
-    public class CreateTransferViewModel
-    {
-        public string SenderFirstName { get; set; }
-        public string SenderLastName { get; set; }
-        public string SenderPesel { get; set; }
-        public string ReceiverAccountNumber { get; set; }
-        public string ReceiverName { get; set; }
-        public string ReceiverNip { get; set; }
-        public string ReceiverRegon { get; set; }
-        public string ReceiverAddress { get; set; }
-        public decimal Amount { get; set; }
-        public int TransferTypeId { get; set; }
-        public bool SaveToAddressBook { get; set; }
     }
 }
