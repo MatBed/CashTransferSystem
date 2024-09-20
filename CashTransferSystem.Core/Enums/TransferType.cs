@@ -2,6 +2,6 @@
 
 public enum TransferType
 {
-    Normal,
-    Priority
+    Normal = 1,
+    Priority = 2
 }
