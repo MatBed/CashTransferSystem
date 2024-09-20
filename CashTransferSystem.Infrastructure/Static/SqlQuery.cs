@@ -19,4 +19,6 @@ public static class SqlQuery
 		FROM [CashTransferSystem].[dbo].[vwTransfersWithDetails]";
 
 	public static string CreateTransfer = "pCreateTransfer";
+
+	public static string GetAllTransferTypes = "SELECT Id, Name FROM [CashTransferSystem].[dbo].[TransferTypes]";
 }

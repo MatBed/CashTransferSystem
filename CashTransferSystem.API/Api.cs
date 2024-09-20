@@ -1,6 +1,6 @@
-﻿
-using CashTransferSystem.Application.Features.Transfers.Commands.CreateTransfer;
+﻿using CashTransferSystem.Application.Features.Transfers.Commands.CreateTransfer;
 using CashTransferSystem.Application.Features.Transfers.Queries.GetTransfers;
+using CashTransferSystem.Application.Features.Transfers.Queries.GetTransferTypes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +12,13 @@ namespace CashTransferSystem.API
         {
             app.MapGet("/transfers", GetCashTransfers).WithSummary("Endpoint for get collection with cash transfers");
             app.MapPost("/transfers", CreateCashTransfers).WithSummary("Endpoint for create cash transfer");
+            app.MapGet("/transferTypes", GetTransferTypes).WithSummary("Endpoint for get transfer types");
+        }
+
+        private static async Task<IResult> GetTransferTypes([FromServices] IMediator mediator)
+        {
+            var transfers = await mediator.Send(new GetTransferTypesQuery());
+            return Results.Ok(transfers);
         }
 
         private static async Task<IResult> CreateCashTransfers(
@@ -24,8 +31,8 @@ namespace CashTransferSystem.API
 
         private static async Task<IResult> GetCashTransfers([FromServices] IMediator mediator)
         {
-            var tasks = await mediator.Send(new GetTransfersQuery());
-            return Results.Ok(tasks);
+            var transfers = await mediator.Send(new GetTransfersQuery());
+            return Results.Ok(transfers);
         }
     }
 }

@@ -48,5 +48,12 @@ namespace CashTransferSystem.Infrastructure.Repositories
 
 			return await connection.QueryAsync<TransferEntity>(SqlQuery.GetAllTransfers);
 		}
-	}
+
+        public async Task<IEnumerable<TransferTypeEntity>> GetAllTransferTypesAsync()
+        {
+            using var connection = _dbContext.CreateConnection();
+
+            return await connection.QueryAsync<TransferTypeEntity>(SqlQuery.GetAllTransferTypes);
+        }
+    }
 }
